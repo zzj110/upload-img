@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="shortcut icon" href="#" />
+    <meta id="viewport" name="viewport" content="width=750">
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+        }
+        ul,li{
+            margin: 0;
+            padding:0;
+        }
+        .image-div{
+            padding: 30px 50px;
+            border-radius: 10px;
+            background-color: #fff;
+            margin: 40px 30px 0;
+        }
+        .upload-div,
+        .upload-div .upload-ul{
+            letter-spacing: -0.5em;
+        }
+        .upload-div .upload-ul .upload-li{
+            height: 131px;
+            width: 131px;
+            margin-right: 22px;
+            letter-spacing: normal;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .upload-div .upload-ul .upload-li .item{
+            height: 100%;
+            width: 100%;
+            border-radius: 10px;
+            border: 3px dashed #97def1;
+            position: relative;
+        }
+        .upload-div .upload-ul .upload-li .item.image{
+            border: none;
+            font-size: 0;
+        }
+        .upload-div .upload-ul .upload-li .item .delete-image{
+            position: absolute;
+            height: 25px;
+            top: -12.5px;
+            left: -12.5px;
+        }
+        .img-input-form{
+            position: absolute;
+            height: 131px;
+            width: 131px;
+            z-index: 999;
+        }
+        .img-input-form input{
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 131px;
+            width: 131px;
+        }
+        .photo-span{
+            display: inline-block;
+            position: absolute;
+            height: 32px;
+            width: 39px;
+            border-radius: 5px;
+            border: 3px solid #97def1;
+            left: 50%;
+            top: 50%;
+            margin-top: -16px;
+            margin-left: -19.5px;
+        }
+        .circle-span{
+            display: inline-block;
+            position: absolute;
+            height: 14px;
+            width: 14px;
+            border-radius: 7px;
+            border: 3px solid #97def1;
+            left: 50%;
+            top: 50%;
+            margin-top: -7px;
+            margin-left: -7px;
+        }
+        .circle-solid-span{
+            display: inline-block;
+            position: absolute;
+            height: 4px;
+            width: 4px;
+            border-radius: 2px;
+            background-color: #97def1;
+            left: 50%;
+            top: 50%;
+            margin-top: -10px;
+            margin-left: 9px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="content" id="content">
+    <div class="image-div" id="uploadDiv">
+        <div class="upload-div" id="uploadImageDiv">
+            <ul class="upload-ul" id="uploadUL">
+                <li class="upload-li" id="uploadImg" style="display: none;background-size: cover">
+                    <div class="item image">
+                        <img class="delete-image" src="assets/image/image-delete.png"/>
+                    </div>
+                </li>
+                <!--默认的点击窗口
+                    在添加了图片之后，循环在这个前面insert图片的li
+                -->
+                <li class="upload-li" id="uploadBtn">
+                    <form class="img-input-form" enctype="multipart/form-data"  style="opacity: 0;">
+                        <input type="file" onchange="selectImage(this)" accept="image/gif, image/jpeg, image/png" id="upload" >
+                    </form>
+                    <div class="item">
+                        <span class="photo-span"></span>
+                        <span class="circle-span"></span>
+                        <span class="circle-solid-span"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="../bower_components/jQuery/jquery-2.2.3.min.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+
+    function selectImage(obj){
+        var imgSrc='';
+        var uploadImg= document.getElementById("uploadImg");
+        var uploadBtn= document.getElementById("uploadBtn")
+        if (obj.files && obj.files[0]){
+            var file = obj.files[0];
+            imgSrc=window.URL.createObjectURL(file) ; // 得到bolb对象路径，可当成普通的文件路径一样使用，赋值给src;
+            uploadImg.style.backgroundImage = "url("+imgSrc+")";
+
+        } else {  //兼容IE
+            //IE下，使用滤镜
+            obj.select();
+            imgSrc = document.selection.createRange().text;
+
+            uploadImg.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+            uploadImg.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;
+
+        }
+        uploadImg.style.display = "";
+        uploadBtn.style.display = "none";
+        $(".delete-image").on('click',function(){
+            uploadImg.style.display = "none";
+            uploadBtn.style.display = "";
+        });
+
+
+        //解决上传相同图片不触发onchange事件
+        // cloneNode()方法用来创建调用这个节点的一个完全相同的副本，参数true表示执行深复制，也就是复制节点及整个子节点树，
+        // 在参数为false的情况下，执行浅复制，即只复制节点本身。复制后返回的节点副本属于文档所有，但并没有为它指定父节点。
+        // 因此，这个节点副本就成为了一个“孤儿”，除非通过appendChild()、insertBefore()或replaceChild()将它添加到文档中。
+        var nf = obj.cloneNode(true);
+        nf.value='';
+        obj.parentNode.replaceChild(nf, obj);
+
+    }
+
+
+</script>
+</body>
+</html>
