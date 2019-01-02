@@ -148,6 +148,9 @@
             //IE下，使用滤镜
             obj.select();
             imgSrc = document.selection.createRange().text;
+			var fso = new ActiveXObject("Scripting.FileSystemObject");   
+			fileSize = fso.GetFile(imgSrc).size;
+			alert(fileSize); //弹出文件大小
 
             uploadImg.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
             uploadImg.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;
